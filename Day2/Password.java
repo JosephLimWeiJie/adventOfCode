@@ -12,7 +12,7 @@ public class Password {
         }        
 
         public static <T, U> Pair<T, U> of(T firstVal, U secondVal) {
-            return new Pair<T, U>(firstVal, secondVal);
+            return new Pair<>(firstVal, secondVal);
         }
         
         public T getFirstVal() {
@@ -61,7 +61,7 @@ public class Password {
         return new Info(range, alphabet, password);
     }
 
-    public static int countValidPassword(List<String> listOfInputs) {
+    public static int checkValidPassword(List<String> listOfInputs) {
         int ans = 0;
 
         List<Info> listOfParsedInputs = new ArrayList<>();
@@ -76,15 +76,13 @@ public class Password {
             char[] charArr = info.getPassword().toCharArray();
             char alphabet = info.getAlphabet();
 
-            int count = 0;
-            for (char c : charArr) {
-                if (c == alphabet) {
-                    count++;
-                }
-            }
+            char lowChar = charArr[low - 1];
+            char highChar = charArr[high - 1];
 
-            if (count >= low && count <= high) {
-                ans++;
+            if (lowChar == alphabet || highChar == alphabet) {
+                if (!(lowChar == alphabet && highChar == alphabet)) {
+                    ans++;
+                }
             }
         }
 
@@ -106,7 +104,7 @@ public class Password {
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         List<String> listOfInputs  = readInput(sc);
-        int ans = countValidPassword(listOfInputs);
+        int ans = checkValidPassword(listOfInputs);
         System.out.println(ans);
     }
 }
