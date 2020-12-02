@@ -6,23 +6,23 @@ import java.util.Collections;
 public class ReportRepair {
     
     public static int sum(List<Integer> listOfNums) {
-        int startIndex = 0;
-        int endIndex = listOfNums.size() - 1;
         Collections.sort(listOfNums);
         int ans = 0;
-        
-        while (startIndex <= endIndex) {
-            int first = listOfNums.get(startIndex);
-            int last = listOfNums.get(endIndex);
-            int sum = first + last;
 
-            if (sum == 2020) {
-                ans = (first * last);
-                break;
-            } else if (sum < 2020) {
-                startIndex++;
-            } else {
-                endIndex--;
+        for (int i = 0; i < listOfNums.size() - 2; i++) {
+            int left = i + 1;
+            int right = listOfNums.size() - 1;
+
+            while (left <= right) {
+                int sum = listOfNums.get(i) + listOfNums.get(left) + listOfNums.get(right);
+                if (sum == 2020) {
+                    ans = (listOfNums.get(i) * listOfNums.get(left) * listOfNums.get(right));
+                    break;
+                } else if (sum < 2020) {
+                    left++;
+                } else {
+                    right--;
+                }
             }
         }
 
