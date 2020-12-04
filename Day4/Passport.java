@@ -155,12 +155,8 @@ public class Passport {
     public static int countValidPassport(List<String> parsedInputs) {
         int ans = 0;
 
-        int count = 0;
-
         for (String input : parsedInputs) {
             String[] fieldsArr = input.trim().split(" ");
-            System.out.println(count + ": " + checkValidPassportData(fieldsArr));
-            count++;
             boolean isValidPassport = checkValidPassportField(fieldsArr) && checkValidPassportData(fieldsArr);
             if (isValidPassport) {
                 ans++;
