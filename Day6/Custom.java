@@ -2,6 +2,39 @@ import java.util.*;
 
 public class Custom {
 
+    public static int countYesPartTwo (List<String> listOfInputs) {
+
+        int count = 0;
+        int groupSize = 0;
+        Map<Character, Integer> map = new HashMap<>();
+
+        for (String input : listOfInputs) {
+            System.out.println(input);
+            if (input.isBlank()) {
+                for (Map.Entry<Character, Integer> entry : map.entrySet()) {
+                    if (entry.getValue() == groupSize) {
+                        count++;
+                    }
+                }
+                groupSize = 0;
+                map.clear();
+            } else {
+                groupSize++;
+                char[] charArr = input.toCharArray();
+
+                for (char c : charArr) {
+                    if (map.containsKey(c)) {
+                        map.computeIfPresent(c, (key, value) -> value += 1);
+                    } else {
+                        map.put(c, 1);
+                    }
+                }
+            }
+        }
+
+        return count;
+    }
+
     public static int countYes (List<String> processedInputs) {
         int sum = 0;
 
@@ -37,31 +70,20 @@ public class Custom {
     public static List<String> readInput(Scanner sc) {
         List<String> listOfInputs = new ArrayList<>();
 
-        String stringToAdd = "";
         while (sc.hasNextLine()) {
-
-            String nextLine = sc.nextLine();
-            stringToAdd += (nextLine);
-
-            if (nextLine.isBlank()) {
-                listOfInputs.add(stringToAdd);
-                stringToAdd = "";
-            }
-
+            String input = sc.nextLine();
+            listOfInputs.add(input);
         }
 
-        if (!(stringToAdd.equals(""))) {
-            listOfInputs.add(stringToAdd);
-        }
-
+        // Add a blank at the end of list for corner case in countYesPartTwo().
+        listOfInputs.add("");
         return listOfInputs;
     }
 
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
         List<String> listOfInputs = readInput(sc);
-        List<String> processedInputs = removeDuplicates(listOfInputs);
-        int ans = countYes(processedInputs);
+        int ans = countYesPartTwo(listOfInputs);
         System.out.println(ans);
     }
 }
