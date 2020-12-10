@@ -36,7 +36,7 @@ public class AdaptedArray {
             if (ways == 1) {
                 possArr[i] = possArr[i - 1];
             } else if (ways == 2) {
-                possArr[i] = possArr[i - 1] + possArr[i - 1];
+                possArr[i] = possArr[i - 1] + possArr[i - 2];
             } else if (ways == 3) {
                 possArr[i] = possArr[i - 1] + possArr[i - 2] + possArr[i - 3];
             }
