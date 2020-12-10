@@ -74,7 +74,6 @@ public class AdaptedArray {
         int oneDiff = 0;
         int threeDiff = 0;
         for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
-            //System.out.println("key: " + entry.getKey() + " value: " + entry.getValue());
             if (entry.getKey() == 1) {
                 oneDiff = entry.getValue();
             } else if (entry.getKey() == 3) {
