@@ -99,13 +99,8 @@ public class RainRisk {
     public static int findManhattanDistancePartTwo(List<Pair<Character, Integer>> listOfInputs) {
         int x = 0;
         int y = 0;
-        int startPosX = 0;
-        int startPosY = 0;
         int waypointX = 10;
         int waypointY = 1;
-
-        Direction waypointDirX = Direction.EAST;
-        Direction waypointDirY = Direction.NORTH;
 
         for (Pair<Character, Integer> p : listOfInputs) {
             char dir = p.getFirstVal();
@@ -124,46 +119,29 @@ public class RainRisk {
                 waypointX -= val;
                 break;
             case 'L':
-                int val2 = 360 - 90;
-                if (val2 == 90) {
-                    int temp = waypointX;
-                    waypointX = waypointY;
-                    waypointY = (-1) * temp;
-                } else if (val2 == 180) {
-                    waypointX = (-1) * waypointX;
-                    waypointY = (-1) * waypointY;
-                } else if (val2 == 270) {
-                    int temp = waypointX;
-                    waypointX = (-1) * waypointY;
-                    waypointY = (-1) * temp;
+                for (int i = 0; i < (val / 90); i++) {
+                    int temp = waypointY;
+                    waypointY = waypointX;
+                    waypointX = temp * (-1);
                 }
                 break;
             case 'R':
-                if (val == 90) {
-                    int temp = waypointX;
-                    waypointX = waypointY;
-                    waypointY = (-1) * temp;
-                } else if (val == 180) {
-                    waypointX = (-1) * waypointX;
-                    waypointY = (-1) * waypointY;
-                } else if (val == 270) {
-                    int temp = waypointX;
-                    waypointX = (-1) * waypointY;
-                    waypointY = (-1) * temp;
+                for (int i = 0; i < (val / 90); i++) {
+                    int temp = waypointY;
+                    waypointY = waypointX * (-1);
+                    waypointX = temp;
                 }
                 break;
             case 'F':
-                int newX = val * waypointX;
-                int newY = val * waypointY;
-                x += newX;
-                y += newY;
-                System.out.println("Ship at " + x + " " + y + " ");
-                System.out.println("Waypoint: " + waypointX + " " + waypointY);
+                x = x + (val * waypointX);
+                y = y + (val * waypointY);
                 break;
             }
+            System.out.println("Ship at " + x + " " + y + " ");
+            System.out.println("Waypoint: " + waypointX + " " + waypointY);
         }
-        //System.out.println("x: " + x + ", y: " + y);
-        return Math.abs(x - startPosX) + Math.abs(y - startPosY);
+
+        return Math.abs(x) + Math.abs(y);
     }
 
     /** Part One solution. */
