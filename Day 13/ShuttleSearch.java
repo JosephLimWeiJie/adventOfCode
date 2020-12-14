@@ -24,7 +24,7 @@ public class ShuttleSearch {
         }
     }
 
-    public static Pair<Integer, List<Integer>> readInput(Scanner sc) {
+    public static Pair<Integer, List<Integer>> readInputPartOne(Scanner sc) {
         int timestamp = 0;
         List<Integer> listOfInts = new ArrayList<>();
 
@@ -47,6 +47,7 @@ public class ShuttleSearch {
         return Pair.of(timestamp, listOfInts);
     }
 
+    /** Part One's solution. */
     public static int partOne(Pair<Integer, List<Integer>> inputs) {
         int timestamp = inputs.getFirstVal();
         List<Integer> listOfInts = inputs.getSecondVal();
@@ -72,10 +73,70 @@ public class ShuttleSearch {
         return busId * (nextArrival - timestamp);
     }
 
+    public static List<Integer> readInputPartTwo(Scanner sc) {
+        int timestamp = 0;
+        List<Integer> listOfInts = new ArrayList<>();
+
+        for (int i = 0; i < 2; i++) {
+            if (i == 0) {
+                String toDiscard = sc.nextLine();
+                continue;
+            } else if (i == 1) {
+                String[] strArr = (sc.nextLine()).split(",");
+                for (String str : strArr) {
+                    try {
+                        int toAdd = Integer.parseInt(str);
+                        listOfInts.add(toAdd);
+                    } catch(NumberFormatException nfe) {
+                        listOfInts.add(-1);
+                    }
+                }
+            }
+        }
+
+        return listOfInts;
+    }
+
+    /** Part Two's solution. */
+    // using chinese remainder theorem
+    // (t + i) % k == 0
+    // t: time, i: index, k: busID, N: input size
+    // index i = (k - (i%k)) % k to ensure index is within range of 0 to N
+    public static long partTwo(List<Integer> listOfInts) {
+        List<Pair<Integer, Integer>> ids = new ArrayList<>();
+        long fullProduct = 1;
+        for (int i = 0; i < listOfInts.size(); i++) {
+            int busId = listOfInts.get(i);
+            if (busId != (-1)) {
+                int idx = i % busId;
+                ids.add(Pair.of((busId - idx) % busId, busId));
+                fullProduct *= busId;
+            }
+        }
+
+        long total = 0;
+        for (Pair<Integer, Integer> p : ids) {
+            long partialProduct = fullProduct / p.getSecondVal();
+            long inverse = modInverse(partialProduct, p.getSecondVal());
+            long term = inverse * partialProduct * p.getFirstVal();
+            total += term;
+        }
+
+        return total % fullProduct;
+    }
+
+    public static long modInverse(long a, long m) {
+        a = a % m;
+        for (long x = 1; x < m; x++)
+            if ((a * x) % m == 1)
+                return x;
+        return 1;
+    }
+
     public static void main(String[] args) {
         Scanner sc = new Scanner(System.in);
-        Pair<Integer, List<Integer>> inputs = readInput(sc);
-        int ans = partOne(inputs);
+        List<Integer> inputs = readInputPartTwo(sc);
+        long ans = partTwo(inputs);
         System.out.println(ans);
     }
 }
