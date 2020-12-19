@@ -1,173 +1,100 @@
 import java.util.*;
 
 public class SeatingSystem {
+    public static List<Pair<Integer, Integer>> directions = direction();
 
-    public static int countOccupiedSeatsPartTwo(char[][] graph, int seatRow, int seatCol) {
-        int row = graph.length;
-        int col = graph[0].length;
+    public static class Pair<T, U> {
+        private final T firstVal;
+        private final U secondVal;
 
+        private Pair(T firstVal, U secondVal) {
+            this.firstVal = firstVal;
+            this.secondVal = secondVal;
+        }
+
+        public static <T, U> Pair<T, U> of(T firstVal, U secondVal) {
+            return new Pair<>(firstVal, secondVal);
+        }
+
+        public T getFirstVal() {
+            return this.firstVal;
+        }
+
+        public U getSecondVal() {
+            return this.secondVal;
+        }
+
+        @Override
+        public String toString() {
+            return "(" + this.firstVal + ", " + this.secondVal + ")";
+        }
+    }
+
+    public static List<Pair<Integer, Integer>> direction() {
+        List<Pair<Integer, Integer>> directions = new ArrayList<>();
+        for (int i = -1; i <= 1; i++) {
+            for (int j = -1; j <= 1; j++) {
+                if (i == 0 && j == 0) {
+                    continue;
+                }
+                directions.add(Pair.of(i, j));
+            }
+        }
+        return directions;
+    }
+
+    public static int countOccupiedSeatsPartOne(char[][] graph, int seatRow, int seatCol,
+                                                List<Pair<Integer, Integer>> directions) {
         int count = 0;
+        int graphColLen = graph[0].length;
+        int graphRowLen = graph.length;
 
-        // check left
-        if (seatCol > 0) {
-            for (int i = seatCol - 1; i >= 0; i--) {
-                if (graph[seatRow][i] == 'L') {
-                    break;
-                }
-                else if (graph[seatRow][i] == '#') {
-                    count++;
-                    break;
-                }
+        for (Pair<Integer, Integer> p : directions) {
+            int newRow = seatRow + p.getFirstVal();
+            int newCol = seatCol + p.getSecondVal();
+            if (newRow < 0 || newRow > graphRowLen - 1 || newCol < 0 || newCol > graphColLen - 1) {
+                continue;
             }
-        }
-        // check right
-        if (seatCol < col - 1) {
-            for (int i = seatCol + 1; i < col; i++) {
-                if (graph[seatRow][i] == 'L') {
-                    break;
-                }
-                else if (graph[seatRow][i] == '#') {
-                    count++;
-                    break;
-                }
-            }
-        }
-        // check top
-        if (seatRow > 0) {
-            for (int i = seatRow - 1; i >= 0; i--) {
-                if (graph[i][seatCol] == 'L') {
-                    break;
-                }
-                if (graph[i][seatCol] == '#') {
-                    count++;
-                    break;
-                }
-            }
-        }
-        // check bottom
-        if (seatRow < row - 1) {
-            for (int i = seatRow; i < row; i++) {
-                if (graph[i][seatCol] == 'L') {
-                    break;
-                }
-                else if (graph[i][seatCol] == '#') {
-                    count++;
-                    break;
-                }
-            }
-        }
-        // check diagonal (top left)
-        if (seatRow > 0 && seatCol > 0) {
-            int j = seatCol;
-            for (int i = seatRow - 1; i >= 0; i--) {
-                j--;
-                if (j < 0) {
-                    break;
-                }
-                if (graph[i][j] == 'L') {
-                    break;
-                }
-                if (graph[i][j] == '#') {
-                    count++;
-                    break;
-                }
-            }
-        }
-        // check diagonal (top right)
-        if (seatRow > 0 && seatCol < col - 1) {
-            int j = seatCol;
-            for (int i = seatRow - 1; i >= 0; i--) {
-                j++;
-                if (j > col - 1) {
-                    break;
-                }
-                //System.out.println("now checking seatRow " + seatRow + " seatCol " + seatCol);
-                if (graph[i][j] == 'L') {
-                    break;
-                }
-                if (graph[i][j] == '#') {
-                    count++;
-                    break;
-                }
-            }
-        }
-        // check diagonal (bottom left)
-        if (seatRow < row - 1 && seatCol > 0) {
-            int j = seatCol;
-            for (int i = seatRow + 1; i < row; i++) {
-                j--;
-                if (j < 0) {
-                    break;
-                }
-                if (graph[i][j] == 'L') {
-                    break;
-                }
-                if (graph[i][j] == '#') {
-                    count++;
-                    break;
-                }
-            }
-        }
-        // check diagonal (bottom right)
-        if (seatRow < row - 1 && seatCol < col - 1) {
-            int j = seatCol;
-            for (int i = seatRow + 1; i < row; i++) {
-                j++;
-                if (j > col - 1) {
-                    break;
-                }
-                if (graph[i][j] == 'L') {
-                    break;
-                }
-                if (graph[i][j] == '#') {
-                    count++;
-                    break;
-                }
+            if (graph[newRow][newCol] == '#') {
+                count++;
+                break;
             }
         }
 
         return count;
     }
 
-    public static int countOccupiedSeatsPartOne(char[][] graph, int seatRow, int seatCol) {
-        int row = graph.length;
-        int col = graph[0].length;
-
+    public static int countOccupiedSeatsPartTwo(char[][] graph, int seatRow, int seatCol,
+                                                List<Pair<Integer, Integer>> directions) {
         int count = 0;
-        // check left
-        if (seatCol > 0 && graph[seatRow][seatCol - 1] == '#') {
-            count++;
-        }
-        // check right
-        if (seatCol < col - 1 && graph[seatRow][seatCol + 1] == '#') {
-            count++;
-        }
-        // check top
-        if (seatRow > 0 && graph[seatRow - 1][seatCol] == '#') {
-            count++;
-        }
-        // check bottom
-        if (seatRow < row - 1 && graph[seatRow + 1][seatCol] == '#') {
-            count++;
-        }
-        // check top left
-        if (seatRow > 0 && seatCol > 0 && graph[seatRow - 1][seatCol - 1] == '#') {
-            count++;
-        }
-        // check top right
-        if (seatRow > 0 && seatCol < col - 1 && graph[seatRow - 1][seatCol + 1] == '#') {
-            count++;
-        }
-        // check bottom left
-        if (seatRow < row - 1 && seatCol > 0 && graph[seatRow + 1][seatCol - 1] == '#') {
-            count++;
-        }
-        // check bottom right
-        if (seatRow < row - 1 && seatCol < col - 1 && graph[seatRow + 1][seatCol + 1] == '#') {
-            count++;
+
+        for (Pair<Integer, Integer> p : directions) {
+            boolean hasOccupied = checkDirection(graph, seatRow + (p.getFirstVal()),
+                    seatCol + (p.getSecondVal()), p);
+            if (hasOccupied) {
+                count++;
+            }
+
         }
 
         return count;
+    }
+
+    public static boolean checkDirection(char[][] graph, int seatRow, int seatCol, Pair<Integer, Integer> p) {
+        int graphColLen = graph[0].length;
+        int graphRowLen = graph.length;
+
+        if (seatRow < 0 || seatRow > graphRowLen - 1 || seatCol < 0 || seatCol > graphColLen - 1) {
+            return false;
+        }
+        if (graph[seatRow][seatCol] == '#') {
+            return true;
+        }
+        if (graph[seatRow][seatCol] == 'L') {
+            return false;
+        }
+
+        return checkDirection(graph,seatRow + p.getFirstVal(), seatCol + p.getSecondVal(), p);
     }
 
     public static char[][] deepCopy(char[][] graph) {
@@ -197,6 +124,8 @@ public class SeatingSystem {
         char[][] prevGraph = deepCopy(graph);
         char[][] newGraph = deepCopy(graph);
         char[][] tempGraph;
+        boolean hasChanged = false;
+
         do {
             newGraph = deepCopy(prevGraph);
             tempGraph = deepCopy(prevGraph);
@@ -206,22 +135,19 @@ public class SeatingSystem {
                     if (prevGraph[i][j] == '.') {
                         continue;
                     }
-                    int count = countOccupiedSeatsPartTwo(prevGraph, i, j);
+                    int count = countOccupiedSeatsPartTwo(prevGraph, i, j, directions);
                     if (count == 0 && prevGraph[i][j] == 'L') {
                         newGraph[i][j] = '#';
-                        //System.out.println("checking pos " + i + " " + j + "and count of " + count);
+                        hasChanged = true;
                     } else if (count >= 5 && prevGraph[i][j] == '#') {
-                        //System.out.println("checking pos " + i + " " + j + "and count of " + count);
                         newGraph[i][j] = 'L';
+                        hasChanged = true;
                     }
                 }
             }
             prevGraph = deepCopy(newGraph);
-            System.out.println("-- new round --");
-            printGraph(newGraph);
-        } while (!equals(newGraph, tempGraph));
+        } while (hasChanged && !equals(newGraph, tempGraph));
 
-        //printGraph(newGraph);
         return countTotalOccupiedSeats(prevGraph);
     }
 
@@ -278,8 +204,10 @@ public class SeatingSystem {
         Scanner sc = new Scanner(System.in);
         List<String> listOfInputs = readInput(sc);
         char[][] graph = createGraph(listOfInputs);
+        //printGraph(graph);
         int ans = getTotalOccupiedSeats(graph);
         System.out.println("Occupied Seats: " + ans);
+        //System.out.println(direction());
 
     }
 }
